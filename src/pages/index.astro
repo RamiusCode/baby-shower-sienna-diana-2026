@@ -3,81 +3,28 @@
 import Layout from "../layouts/Layout.astro";
 import Portada from "../components/Portada.astro";
 import NombresFlores from "../components/NombresFlores.astro";
-import Dedicatoria from "../components/Dedicatoria.astro";
-import Reproductor from "../components/Reproductor.astro";
-import Bendicion from "../components/Bendicion.astro";
 import NombrePadres from "../components/NombresPadres.astro";
 import Fecha from "../components/Fecha.astro";
 import Contador from "../components/Contador.astro";
-import Foto2 from "../components/Foto2.astro";
 import DireccionCeremonia from "../components/DireccionCeremonia.astro";
-import DireccionRecepcion from "../components/DireccionRecepcion.astro";
-import Itinerario from "../components/Itinerario.astro";
-import Reservas from "../components/Reservas.astro";
-import SugerenciaRegalo from "../components/SugerenciaRegalo.astro";
-import CodigoVestimenta from "../components/CodigoVestimenta.astro";
 import Restriccion from "../components/Restriccion.astro";
-import Confirmar from "../components/Confirmar.astro";
-import DespedidaDedicatoria from "../components/DespedidaDedicatoria.astro";
-import Foto3 from "../components/foto3.astro";
-import Des from "../components/Des.astro";
-import Galeria from "../components/Galeria.astro";
-import Calendario from "../components/Calendario.astro";
-import Contenido from "../components/Contenido.astro";
+import SugerenciaRegalo from "../components/SugerenciaRegalo.astro";
 import Regalo from "../components/Regalo.astro";
-import Mensaje from  "../components/Mensaje.astro";
-import Imagen2 from  "../components/Imagen2.astro";
-import Foto2 from  "../components/Foto2.astro";
-
 ---
 
 <Layout title="Baby Shower">
-    <!-- PORTADA (se muestra primero, bloquea scroll) -->
-     <Portada />
+    <!-- PORTADA (se muestra primero, bloquea el scroll) -->
+    <Portada />
 
-    <!-- CONTENIDO PRINCIPAL (oculto hasta que se presione el sobre) -->
+    <!-- CONTENIDO PRINCIPAL (se anima al abrir el sobre) -->
     <div id="contenido-principal">
         <NombresFlores />
         <NombrePadres />
         <Fecha />
         <Contador />
-
-          <DireccionCeremonia />
-        <!-- <Contenido /> -->
-        <!-- <Mensaje /> -->
-        <!-- <Imagen2 /> -->
-        
-        <!-- <Foto3 /> -->
-         
-        
-        
-        <!-- <Reproductor /> -->
-        
-        
-        <!-- <DireccionCeremonia /> -->
-       
-        <!-- <Calendario /> -->
-        <!-- <Foto2 /> -->
-       
-        <!-- <DireccionRecepcion /> -->
-        <!-- <Itinerario /> -->
-        <!-- <Reservas numeroPases={2} /> -->
-        
-        <!-- <CodigoVestimenta /> -->
-
-         <!-- El bloque de confirmar asistencia ahora vive dentro de DireccionCeremonia -->
-         <!-- <Confirmar /> -->
-        <!-- <Dedicatoria /> -->
-        <!-- <Restriccion /> -->
-       <!-- <Galeria />-->
-
-       
-<!-- <Bendicion /> -->
- <!-- <SugerenciaRegalo /> -->
-        
-        <!-- <DespedidaDedicatoria /> -->
-        <!-- <Foto3 /> -->
-        <!-- <Des /> -->
+        <DireccionCeremonia />
+        <Restriccion />
+        <SugerenciaRegalo />
 
         <!-- CIERRE: regalo + guarda la fecha -->
         <Regalo />
