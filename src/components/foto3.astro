@@ -1,0 +1,160 @@
+---
+// src/components/foto3.astro
+// Foto 3 con el mismo marco tipo fotografía antigua (polaroid) inclinada
+// que usa Contenido.astro, con las hojas asomando por los costados.
+---
+
+<section id="foto3-section">
+  <div id="f3-col">
+    <div id="f3-foto">
+      <!-- hojas detrás de la foto -->
+      <div class="f3-hoja f3-hoja-izq">
+        <img src="/imagenes/costado.png" alt="" />
+      </div>
+      <div class="f3-hoja f3-hoja-der">
+        <img src="/imagenes/costado.png" alt="" />
+      </div>
+
+      <div class="f3-marco">
+        <div class="f3-inner">
+          <img src="/imagenes/foto3.png" alt="Foto" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #foto3-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    background: transparent;
+    /* poca separación arriba (queda cerca del componente anterior) */
+    padding: 0.25rem 0 2rem;
+  }
+
+  #f3-col {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Foto ── */
+  #f3-foto {
+    position: relative;
+    width: 74cqw;
+  }
+
+  /* Hojas que asoman por detrás de la foto */
+  .f3-hoja {
+    position: absolute;
+    top: 50%;
+    width: 15.4cqw;
+    z-index: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .f3-hoja img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* -13cqw = borde de la columna (la foto mide 74cqw y está centrada) */
+  .f3-hoja-izq {
+    left: -13cqw;
+  }
+
+  .f3-hoja-der {
+    right: -13cqw;
+  }
+
+  .f3-hoja-der img {
+    transform: scaleX(-1);
+  }
+
+  /* Marco blanco tipo fotografía antigua, inclinado hacia el otro lado
+     que el de Contenido.astro para que se vean alternados */
+  .f3-marco {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(160deg, #ffffff 0%, #fdfcf6 60%, #f7f5ea 100%);
+    padding: 4cqw 4cqw 12cqw;
+    border-radius: 2px;
+    transform: rotate(3.5deg);
+    box-shadow:
+      0 2px 4px rgba(90, 105, 70, 0.14),
+      0 16px 34px rgba(90, 105, 70, 0.22);
+  }
+
+  .f3-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 853 / 1280;
+    overflow: hidden;
+    background: #eef1e6;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07);
+  }
+
+  .f3-inner img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // ── Estado inicial ────────────────────────────────────────
+    gsap.set("#f3-foto", { opacity: 0, y: 40, scale: 0.94 });
+    gsap.set(".f3-marco", { rotate: 9 });
+    // el y: -50% mantiene el centrado vertical que hace el CSS
+    gsap.set(".f3-hoja-izq", { opacity: 0, x: "-45%", y: "-50%" });
+    gsap.set(".f3-hoja-der", { opacity: 0, x: "45%", y: "-50%" });
+
+    // ── Entrada al hacer scroll ───────────────────────────────
+    ScrollTrigger.create({
+      trigger: "#foto3-section",
+      start: "top 80%",
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(
+          "#f3-foto",
+          { opacity: 1, y: 0, scale: 1, duration: 1.4, ease: "power2.out" },
+          0,
+        )
+          // la foto se acomoda girando suavemente hasta su inclinación final
+          .to(
+            ".f3-marco",
+            { rotate: 3.5, duration: 1.6, ease: "back.out(1.5)" },
+            0,
+          )
+          .to(
+            [".f3-hoja-izq", ".f3-hoja-der"],
+            { opacity: 1, x: 0, y: "-50%", duration: 1.5, ease: "power2.out" },
+            0.25,
+          );
+      },
+      onLeaveBack: () => {
+        gsap.set("#f3-foto", { opacity: 0, y: 40, scale: 0.94 });
+        gsap.set(".f3-marco", { rotate: 9 });
+        gsap.set(".f3-hoja-izq", { opacity: 0, x: "-45%", y: "-50%" });
+        gsap.set(".f3-hoja-der", { opacity: 0, x: "45%", y: "-50%" });
+      },
+    });
+  });
+</script>

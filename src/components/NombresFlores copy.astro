@@ -1,0 +1,389 @@
+---
+// src/components/NombresFlores.astro
+// Bienvenida — temática flores + mariposas
+// Mismo lienzo de ancho fijo que la Portada: todo en cqw para que se vea
+// igual en celular, laptop y PC.
+---
+
+<section id="nombres-flores">
+  <div id="nf-marco">
+    <!-- ═══════ FLORES + MARIPOSAS (esquina superior) ═══════ -->
+    <img id="nf-flores" src="/imagenes/flor.png" alt="" />
+
+    <!-- ═══════ TEXTO CENTRAL ═══════ -->
+    <div id="nf-texto">
+      <p id="nf-invito" class="font-cinzel">Te invito a mi</p>
+
+      <!-- el logo con una mariposa a cada costado -->
+      <div id="nf-logo-fila">
+        <div id="nf-mariposa-izq"><img src="/imagenes/mariposa.png" alt="" /></div>
+        <img id="nf-logo" src="/imagenes/logo.png" alt="Baby Shower" />
+        <div id="nf-mariposa-der"><img src="/imagenes/mariposa.png" alt="" /></div>
+      </div>
+
+      <p id="nf-nombre" class="font-selna">Sienna Diana</p>
+    </div>
+  </div>
+
+  <!-- 🎵 BOTÓN FLOTANTE DE MÚSICA -->
+  <div
+    class="fixed bottom-6 right-6 z-[9999]"
+    id="boton-musica-flotante"
+    style="opacity: 0;"
+  >
+    <button
+      id="toggle-musica-global"
+      class="group relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+      style="background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(212,122,149,0.55);"
+      aria-label="Controlar música"
+    >
+      <!-- ICONO PAUSE - inicia oculto -->
+      <svg
+        id="icono-pause-global"
+        class="w-6 h-6 hidden relative z-10"
+        style="color: #d47a95;"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M5.5 3.5A1.5 1.5 0 017 2h1a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 018 18H7a1.5 1.5 0 01-1.5-1.5v-13zm7 0A1.5 1.5 0 0114 2h1a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5h-1a1.5 1.5 0 01-1.5-1.5v-13z"
+        ></path>
+      </svg>
+
+      <!-- ICONO PLAY - inicia visible -->
+      <svg
+        id="icono-play-global"
+        class="w-6 h-6 relative z-10"
+        style="color: #d47a95;"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"
+        ></path>
+      </svg>
+
+      <!-- Onda de sonido - inicia oculta -->
+      <div
+        class="absolute -inset-2 rounded-full hidden"
+        style="border: 2px solid rgba(212,122,149,0.55);"
+        id="onda-sonido"
+      >
+      </div>
+    </button>
+  </div>
+</section>
+
+<style>
+  #nombres-flores {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    /* deja ver el fondo global estático del Layout */
+    background: transparent;
+  }
+
+  /* ═══════ LIENZO (mismo ancho que la portada) ═══════ */
+  #nf-marco {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+    /* La altura la define el contenido, no un aspect-ratio fijo: así la
+       sección termina justo debajo del nombre y no deja hueco muerto antes
+       de la siguiente. El padding de arriba reserva el sitio de las flores
+       (flor.png es 100% de ancho y ratio 1.956 → 51cqw de alto). */
+    padding: 52cqw 0 1cqw;
+  }
+
+  #nf-marco img {
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* ── Flores + mariposas de arriba ── */
+  #nf-flores {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ── Mariposas, una a cada costado del logo ── */
+  /* Van dentro de la fila del logo, centradas verticalmente con margin
+     negativo (la mitad de su alto: 11 / 0.781 / 2 = 7.05cqw) en vez de
+     translate, porque GSAP anima el transform de estos contenedores. */
+  #nf-mariposa-izq,
+  #nf-mariposa-der {
+    position: absolute;
+    top: 50%;
+    margin-top: -7.05cqw;
+    width: 11cqw;
+    z-index: 3;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 12px rgba(150, 110, 175, 0.22));
+  }
+
+  #nf-mariposa-izq {
+    left: 1cqw;
+  }
+
+  #nf-mariposa-der {
+    right: 1cqw;
+  }
+
+  #nf-mariposa-izq img,
+  #nf-mariposa-der img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* El volteo va en el <img>, no en el contenedor:
+     GSAP anima el contenedor y pisaría el transform.
+     Así las dos miran hacia el centro. */
+  #nf-mariposa-der img {
+    transform: scaleX(-1);
+  }
+
+  /* ── Bloque de texto central ── */
+  /* En flujo normal: es lo que le da la altura a la sección. */
+  #nf-texto {
+    position: relative;
+    width: 94cqw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 4;
+  }
+
+  /* Fila del logo: el logo al centro y las mariposas a los costados */
+  #nf-logo-fila {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  #nf-invito {
+    margin: 0;
+    font-size: 4.4cqw;
+    line-height: 1.4;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    /* compensa el espacio que letter-spacing deja tras la última letra */
+    text-indent: 0.26em;
+    text-transform: uppercase;
+    /* siempre en una sola línea */
+    white-space: nowrap;
+    color: #c2a05a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  #nf-logo {
+    width: 57cqw;
+    height: auto;
+    margin-top: 0.5cqw;
+    filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.85));
+  }
+
+  #nf-nombre {
+    margin: 6cqw 0 0;
+    /* Selna solo trae Regular: peso normal para que el navegador no le
+       invente una negrita falsa */
+    font-size: 9.5cqw;
+    line-height: 1.15;
+    /* el nombre nunca se parte en dos renglones */
+    white-space: nowrap;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    /* compensa el espacio que letter-spacing deja tras la última letra */
+    text-indent: 0.04em;
+    text-transform: uppercase;
+    /* Dorado plano, sin degradados */
+    color: #c9a227;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8),
+      0 3px 12px rgba(255, 255, 255, 0.6);
+  }
+
+  /* ── Botón de música ── */
+  #onda-sonido {
+    animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    75%,
+    100% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse-subtle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  #boton-musica-flotante button {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+
+  #boton-musica-flotante button:hover {
+    animation: none;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // ── Entrada animada (al entrar en pantalla) ────────────────
+    const seccion = document.getElementById("nombres-flores");
+
+    // Las flores bajan desde arriba, la mariposa entra por la izquierda y
+    // el texto sube — lento y delicado.
+    gsap.set("#nf-flores", { opacity: 0, y: "-45%" });
+    gsap.set("#nf-mariposa-izq", { opacity: 0, x: "-70%", rotation: -8 });
+    gsap.set("#nf-mariposa-der", { opacity: 0, x: "70%", rotation: 8 });
+    gsap.set("#nf-invito", { opacity: 0, y: 12 });
+    gsap.set("#nf-logo", { opacity: 0, y: 16, scale: 0.94 });
+    gsap.set("#nf-nombre", { opacity: 0, y: 14 });
+
+    const animarEntrada = () => {
+      const tl = gsap.timeline();
+      tl.to(
+        "#nf-flores",
+        { opacity: 1, y: 0, duration: 1.9, ease: "power2.out" },
+        0,
+      )
+        .to(
+          ["#nf-mariposa-izq", "#nf-mariposa-der"],
+          {
+            opacity: 1,
+            x: 0,
+            rotation: 0,
+            duration: 1.9,
+            ease: "power2.out",
+          },
+          0,
+        )
+        .to(
+          "#nf-invito",
+          { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+          0.55,
+        )
+        .to(
+          "#nf-logo",
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.3,
+            ease: "back.out(1.3)",
+          },
+          0.8,
+        )
+        .to(
+          "#nf-nombre",
+          { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+          1.1,
+        )
+        // Las mariposas quedan flotando suavemente, cada una a su ritmo
+        .add(() => {
+          gsap.to("#nf-mariposa-izq", {
+            y: -9,
+            rotation: -3,
+            duration: 3.6,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+          gsap.to("#nf-mariposa-der", {
+            y: -9,
+            rotation: 3,
+            duration: 4.1,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+        }, 2.1);
+    };
+
+    if (seccion) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animarEntrada();
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.25 },
+      );
+      observer.observe(seccion);
+    }
+
+    // ── Botón flotante de música ──────────────────────────────
+    const botonToggle = document.getElementById("toggle-musica-global");
+    const iconoPlay = document.getElementById("icono-play-global");
+    const iconoPause = document.getElementById("icono-pause-global");
+    const ondaSonido = document.getElementById("onda-sonido");
+    const botonFlotante = document.getElementById("boton-musica-flotante");
+
+    if (botonFlotante) botonFlotante.style.opacity = "1";
+
+    // Sincronizar estado visual al cargar (por si la música ya venía corriendo desde Portada)
+    function sincronizarEstadoInicial() {
+      const estadoActual = (window as any).estaReproduciendoGlobal;
+      if (estadoActual) {
+        iconoPlay?.classList.add("hidden");
+        iconoPause?.classList.remove("hidden");
+        ondaSonido?.classList.remove("hidden");
+      }
+    }
+
+    sincronizarEstadoInicial();
+
+    // Portada dispara este evento cuando el invitado toca el sobre
+    window.addEventListener("musica-iniciada", () => {
+      iconoPlay?.classList.add("hidden");
+      iconoPause?.classList.remove("hidden");
+      ondaSonido?.classList.remove("hidden");
+    });
+
+    botonToggle?.addEventListener("click", () => {
+      const audioActual = (window as any).audioGlobal;
+      const estadoActual = (window as any).estaReproduciendoGlobal;
+
+      if (estadoActual && audioActual) {
+        audioActual.pause();
+        (window as any).estaReproduciendoGlobal = false;
+        iconoPause?.classList.add("hidden");
+        iconoPlay?.classList.remove("hidden");
+        ondaSonido?.classList.add("hidden");
+      } else if (audioActual) {
+        audioActual.play().catch(() => {});
+        (window as any).estaReproduciendoGlobal = true;
+        iconoPlay?.classList.add("hidden");
+        iconoPause?.classList.remove("hidden");
+        ondaSonido?.classList.remove("hidden");
+      }
+    });
+  });
+</script>

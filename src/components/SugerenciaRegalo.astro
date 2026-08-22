@@ -1,0 +1,204 @@
+---
+// SugerenciaRegalo.astro
+---
+
+<section class="relative w-full py-8 px-6 overflow-hidden">
+    <!-- Separador arriba -->
+    <div class="mb-6 mx-auto" style="max-width: 230px;">
+        <img
+            src="/imagenes/separador.png"
+            alt=""
+            class="w-full object-contain block"
+        />
+    </div>
+
+    <div
+        class="max-w-sm mx-auto relative z-10 text-center"
+        id="contenedor-regalos"
+    >
+        <!-- Moños flanqueando el título -->
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <img
+                src="/imagenes/mono2.png"
+                alt=""
+                id="mono-izq"
+                style="width: 52px; object-fit: contain;"
+            />
+            <h3
+                class="font-great-vibes"
+                style="color: #caa85f; line-height: 1.1; font-size: clamp(2.1rem, 8.5vw, 2.8rem);"
+            >
+                Sugerencia de Regalo
+            </h3>
+            <img
+                src="/imagenes/mono2.png"
+                alt=""
+                id="mono-der"
+                style="width: 52px; object-fit: contain;"
+            />
+        </div>
+
+        <!-- Texto principal -->
+        <div id="texto-regalo">
+            <p
+                class="font-charm text-xl leading-relaxed mb-6"
+                style="color: #d0727d;"
+            >
+                Tu presencia es mi mejor regalo, pero si deseas tener un detalle
+                conmigo, puedes hacerlo a través del siguiente QR
+            </p>
+        </div>
+
+        <!-- QR limpio sin card -->
+        <div class="flex justify-center mb-4" id="qr-container">
+            <div
+                class="rounded-2xl p-3"
+                style="border: 2px solid #d0727d33; background: white;"
+            >
+                <img
+                    src="/imagenes/qr.png"
+                    alt="Código QR"
+                    class="w-52 h-52 object-contain rounded-xl"
+                />
+            </div>
+        </div>
+
+        <!-- Nombre de cuenta debajo del QR -->
+        <p class="font-crimson uppercase tracking-widest text-sm mt-3" style="color: #caa85f; letter-spacing: 0.2em;">Nombre de cuenta</p>
+        <p class="font-charm text-xl mt-1 mb-2" style="color: #d0727d;">Castro Montenegro Eva</p>
+
+        <p class="font-crimson uppercase tracking-widest text-sm" style="color: #caa85f; letter-spacing: 0.2em;">Cuenta</p>
+        <p class="font-charm text-xl mt-1 mb-1" style="color: #d0727d;">1310393181</p>
+
+        <!-- Puntos decorativos -->
+        <div class="flex justify-center gap-2 mb-4">
+            <div
+                class="w-1.5 h-1.5 rounded-full"
+                style="background: #d0727d; opacity: 0.5;"
+            >
+            </div>
+            <div
+                class="w-1.5 h-1.5 rounded-full"
+                style="background: #caa85f; opacity: 0.6;"
+            >
+            </div>
+            <div
+                class="w-1.5 h-1.5 rounded-full"
+                style="background: #d0727d; opacity: 0.5;"
+            >
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const initRegalos = () => {
+        gsap.set("#contenedor-regalos", { opacity: 0, y: 30 });
+        gsap.set("#flor-left", { opacity: 0, x: -30 });
+        gsap.set("#flor-right", { opacity: 0, x: 30 });
+        gsap.set("#mono-izq", { opacity: 0, x: -15 });
+        gsap.set("#mono-der", { opacity: 0, x: 15, scaleX: -1 });
+
+        ScrollTrigger.create({
+            trigger: "#contenedor-regalos",
+            start: "top 80%",
+
+            onEnter: () => {
+                const tl = gsap.timeline();
+                tl.to(
+                    "#flor-left",
+                    { opacity: 0.9, x: 0, duration: 1.2, ease: "power2.out" },
+                    0,
+                )
+                    .to(
+                        "#flor-right",
+                        {
+                            opacity: 0.9,
+                            x: 0,
+                            duration: 1.2,
+                            ease: "power2.out",
+                        },
+                        0.1,
+                    )
+                    .to(
+                        "#contenedor-regalos",
+                        { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
+                        0.2,
+                    )
+                    .to(
+                        "#mono-izq",
+                        {
+                            opacity: 1,
+                            x: 0,
+                            duration: 0.8,
+                            ease: "back.out(1.5)",
+                        },
+                        0.5,
+                    )
+                    .to(
+                        "#mono-der",
+                        {
+                            opacity: 1,
+                            x: 0,
+                            scaleX: -1,
+                            duration: 0.8,
+                            ease: "back.out(1.5)",
+                        },
+                        0.6,
+                    );
+
+                // Balanceo suave moños
+                gsap.to("#mono-izq", {
+                    rotation: -7,
+                    duration: 2.5,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                    delay: 1.2,
+                    transformOrigin: "center top",
+                });
+                gsap.to("#mono-der", {
+                    rotation: -7,
+                    scaleX: -1,
+                    duration: 2.8,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                    delay: 1.4,
+                    transformOrigin: "center top",
+                });
+            },
+
+            onLeaveBack: () => {
+                gsap.killTweensOf([
+                    "#mono-izq",
+                    "#mono-der",
+                    "#flor-left",
+                    "#flor-right",
+                ]);
+                gsap.to(
+                    [
+                        "#contenedor-regalos",
+                        "#flor-left",
+                        "#flor-right",
+                        "#mono-izq",
+                        "#mono-der",
+                    ],
+                    {
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: "power2.in",
+                    },
+                );
+            },
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", initRegalos);
+    document.addEventListener("astro:page-load", initRegalos);
+</script>

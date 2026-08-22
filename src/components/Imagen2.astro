@@ -1,0 +1,223 @@
+---
+// src/components/Imagen2.astro
+// Tarjeta crema (la misma de Fecha / Contador / Mensaje) con el mensaje de los
+// papis, las hojas del separador arriba, las hojas de los costados y los tres
+// animalitos apoyados abajo, pisando el borde de la tarjeta.
+---
+
+<section id="imagen2-section">
+  <div id="img2-wrap">
+    <!-- ═══════ HOJAS DE LOS COSTADOS (detrás de la tarjeta) ═══════ -->
+    <div id="img2-costado-izq"><img src="/imagenes/costado.png" alt="" /></div>
+    <div id="img2-costado-der"><img src="/imagenes/costado.png" alt="" /></div>
+
+    <!-- ═══════ HOJAS DE ARRIBA ═══════ -->
+    <img id="img2-separador" src="/imagenes/separador.png" alt="" />
+
+    <!-- ═══════ TARJETA ═══════ -->
+    <div id="img2-card">
+      <p id="img2-texto" class="font-cormorant">
+        Están ansiosos por compartir esta alegría con ustedes y quieren que los
+        acompañen y formen parte de este hermoso momento.
+      </p>
+    </div>
+
+    <!-- ═══════ ANIMALES (elefante · león · jirafa) ═══════ -->
+    <img id="img2-elefante" src="/imagenes/elefante.png" alt="" />
+    <img id="img2-leon" src="/imagenes/leon.png" alt="" />
+    <img id="img2-jirafa" src="/imagenes/jirafa.png" alt="" />
+  </div>
+</section>
+
+<style>
+  #imagen2-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    background: transparent;
+    padding: 0.5rem 0 1.5rem;
+  }
+
+  /* ═══════ LIENZO ═══════ */
+  #img2-wrap {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+    /* arriba: hojas del separador · abajo: los animales */
+    padding: 25cqw 0 26cqw;
+  }
+
+  #img2-wrap img {
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  /* ── Hojas de arriba ── */
+  #img2-separador {
+    position: absolute;
+    top: 0;
+    left: 22.5cqw;
+    width: 55cqw;
+    height: auto;
+    z-index: 3;
+    filter: drop-shadow(0 4px 10px rgba(90, 110, 60, 0.16));
+  }
+
+  /* ── Hojas de los costados ── */
+  #img2-costado-izq,
+  #img2-costado-der {
+    position: absolute;
+    top: 34%;
+    width: 16cqw;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #img2-costado-izq img,
+  #img2-costado-der img {
+    width: 100%;
+    height: auto;
+  }
+
+  #img2-costado-izq {
+    left: 0;
+  }
+
+  #img2-costado-der {
+    right: 0;
+  }
+
+  #img2-costado-der img {
+    transform: scaleX(-1);
+  }
+
+  /* ═══════ TARJETA ═══════ */
+  #img2-card {
+    position: relative;
+    z-index: 2;
+    margin: 0 8cqw;
+    /* el relleno de abajo deja el texto por encima de los animales */
+    padding: 9cqw 7cqw 22cqw;
+    text-align: center;
+    border-radius: 5cqw;
+    background: rgba(253, 252, 245, 0.93);
+    border: 1px solid rgba(142, 156, 107, 0.5);
+    box-shadow:
+      0 2px 6px rgba(90, 105, 70, 0.1),
+      0 14px 30px rgba(90, 105, 70, 0.16);
+  }
+
+  /* borde interior punteado */
+  #img2-card::before {
+    content: "";
+    position: absolute;
+    inset: 1.8cqw;
+    border: 1px dashed rgba(142, 156, 107, 0.55);
+    border-radius: 3.5cqw;
+    pointer-events: none;
+  }
+
+  #img2-texto {
+    position: relative;
+    margin: 0 auto;
+    max-width: 62cqw;
+    /* text-xl */
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #7f8f66;
+  }
+
+  /* ── Animales, apoyados abajo pisando la tarjeta ── */
+  #img2-elefante,
+  #img2-leon,
+  #img2-jirafa {
+    position: absolute;
+    bottom: 0;
+    height: auto;
+    z-index: 4;
+    filter: drop-shadow(0 5px 10px rgba(90, 110, 60, 0.18));
+  }
+
+  #img2-elefante {
+    left: 3cqw;
+    width: 31cqw;
+  }
+
+  /* el león va al centro y por delante de los otros dos */
+  #img2-leon {
+    left: 34cqw;
+    width: 33cqw;
+    z-index: 5;
+  }
+
+  #img2-jirafa {
+    left: 67cqw;
+    width: 29cqw;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inicial = () => {
+      gsap.set("#img2-card", { opacity: 0, y: 28, scale: 0.96 });
+      gsap.set("#img2-separador", { opacity: 0, y: "-45%" });
+      gsap.set("#img2-costado-izq", { opacity: 0, x: "-55%" });
+      gsap.set("#img2-costado-der", { opacity: 0, x: "55%" });
+      gsap.set("#img2-elefante", { opacity: 0, x: "-45%", y: "18%" });
+      gsap.set("#img2-leon", { opacity: 0, y: "35%" });
+      gsap.set("#img2-jirafa", { opacity: 0, x: "45%", y: "18%" });
+      gsap.set("#img2-texto", { opacity: 0, y: 16 });
+    };
+
+    inicial();
+
+    ScrollTrigger.create({
+      trigger: "#imagen2-section",
+      start: "top 80%",
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(
+          "#img2-card",
+          { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "back.out(1.2)" },
+          0,
+        )
+          .to(
+            "#img2-separador",
+            { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" },
+            0.15,
+          )
+          .to(
+            ["#img2-costado-izq", "#img2-costado-der"],
+            { opacity: 1, x: 0, duration: 1.4, ease: "power2.out" },
+            0.25,
+          )
+          .to(
+            ["#img2-elefante", "#img2-leon", "#img2-jirafa"],
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              duration: 1.4,
+              ease: "power2.out",
+              stagger: 0.12,
+            },
+            0.35,
+          )
+          .to(
+            "#img2-texto",
+            { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" },
+            0.6,
+          );
+      },
+      onLeaveBack: inicial,
+    });
+  });
+</script>

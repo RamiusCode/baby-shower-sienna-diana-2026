@@ -1,0 +1,286 @@
+---
+// src/components/NombresPadres.astro
+// "Mis papitos": foto de los padres en marco de arco (foto.png), la polaroid
+// de la ecografía (foto2.png) montada en la esquina, los nombres y el mensaje.
+// Todo en cqw sobre un lienzo de ancho fijo, igual que el resto de secciones.
+
+const mama = "Nicole";
+const papa = "Jorge";
+---
+
+<section id="padres-section">
+  <div id="np-wrap">
+    <!-- ═══════ ADORNOS ═══════ -->
+    <!-- corazón trazado (arriba izquierda) -->
+    <img id="np-corazon" src="/imagenes/corazon.png" alt="" />
+
+    <!-- destellos -->
+    <svg class="np-destello np-destello-1" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 0 C13 7 17 11 24 12 C17 13 13 17 12 24 C11 17 7 13 0 12 C7 11 11 7 12 0 Z"
+      ></path>
+    </svg>
+    <svg class="np-destello np-destello-2" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 0 C13 7 17 11 24 12 C17 13 13 17 12 24 C11 17 7 13 0 12 C7 11 11 7 12 0 Z"
+      ></path>
+    </svg>
+    <svg class="np-destello np-destello-3" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 0 C13 7 17 11 24 12 C17 13 13 17 12 24 C11 17 7 13 0 12 C7 11 11 7 12 0 Z"
+      ></path>
+    </svg>
+
+    <!-- ═══════ FOTOS ═══════ -->
+    <div id="np-fotos">
+      <img id="np-foto" src="/imagenes/foto.png" alt="Los papás" />
+      <img id="np-polaroid" src="/imagenes/foto2.png" alt="Ecografía del bebé" />
+    </div>
+
+    <!-- ═══════ TEXTO ═══════ -->
+    <div id="np-texto">
+      <p id="np-papitos" class="font-cinzel">Mis papitos</p>
+
+      <p id="np-nombres" class="font-great-vibes">
+        {mama} <span class="np-amp">&amp;</span> {papa}
+      </p>
+
+      <p id="np-mensaje" class="font-cinzel">
+        Muy pronto llegará nuestra pequeña princesa para iluminar nuestras vidas
+        con amor y ternura. Queremos compartir contigo la alegría de celebrar su
+        dulce llegada.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  #padres-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    background: transparent;
+    padding: 0 0 1.25rem;
+  }
+
+  /* ═══════ LIENZO ═══════ */
+  #np-wrap {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+  }
+
+  #np-wrap img {
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  /* ── Adornos ── */
+  #np-corazon {
+    position: absolute;
+    top: 1cqw;
+    left: 2cqw;
+    width: 22cqw;
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .np-destello {
+    position: absolute;
+    width: 5cqw;
+    height: auto;
+    z-index: 4;
+    fill: #ffffff;
+    filter: drop-shadow(0 0 3px rgba(232, 150, 178, 0.9));
+    pointer-events: none;
+  }
+
+  .np-destello-1 {
+    top: 22cqw;
+    right: 12cqw;
+  }
+
+  .np-destello-2 {
+    top: 62cqw;
+    left: 30cqw;
+    width: 3.6cqw;
+  }
+
+  .np-destello-3 {
+    top: 39cqw;
+    right: 4cqw;
+    width: 4cqw;
+    fill: #f2b6c8;
+    filter: none;
+  }
+
+  /* ═══════ FOTOS ═══════ */
+  #np-fotos {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+  }
+
+  /* Foto de los papás, ya viene con su marco de arco dorado */
+  #np-foto {
+    width: 52cqw;
+    height: auto;
+    margin: 0 auto;
+    filter: drop-shadow(0 6px 16px rgba(150, 110, 120, 0.22));
+  }
+
+  /* Polaroid con cinta, montada sobre la esquina de la foto grande.
+     La foto mide 52/0.625 = 83.2cqw de alto y la polaroid 40/0.951 = 42cqw,
+     así que arrancando en 45cqw termina justo pasando el borde de abajo. */
+  #np-polaroid {
+    position: absolute;
+    top: 45cqw;
+    left: 1cqw;
+    width: 40cqw;
+    height: auto;
+    z-index: 3;
+    /* sin rotación: la inclinación ya viene dibujada en la propia imagen */
+    filter: drop-shadow(0 5px 12px rgba(90, 70, 70, 0.28));
+  }
+
+  /* ═══════ TEXTO ═══════ */
+  #np-texto {
+    position: relative;
+    z-index: 4;
+    margin-top: 7cqw;
+    text-align: center;
+  }
+
+  #np-papitos {
+    margin: 0;
+    /* legible en celular: en una pantalla de 360px son ~17px */
+    font-size: 4.8cqw;
+    line-height: 1.4;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    /* compensa el espacio que letter-spacing deja tras la última letra */
+    text-indent: 0.3em;
+    text-transform: uppercase;
+    color: #dda2b6;
+  }
+
+  #np-nombres {
+    margin: 5cqw 0 0;
+    /* Great Vibes solo trae Regular: peso normal para que el navegador no le
+       invente una negrita falsa. */
+    font-size: 10.5cqw;
+    line-height: 1.3;
+    font-weight: 400;
+    white-space: nowrap;
+    color: #e58aa6;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .np-amp {
+    font-size: 0.72em;
+    color: #eaa8bd;
+  }
+
+  #np-mensaje {
+    margin: 5cqw auto 0;
+    max-width: 78cqw;
+    font-size: 3.7cqw;
+    line-height: 1.85;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #4f4340;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inicial = () => {
+      gsap.set("#np-foto", { opacity: 0, y: 26, scale: 0.96 });
+      gsap.set("#np-polaroid", { opacity: 0, x: "-40%" });
+      gsap.set("#np-corazon", { opacity: 0, scale: 0.7 });
+      gsap.set(".np-destello", { opacity: 0, scale: 0.4 });
+      gsap.set("#np-papitos", { opacity: 0, y: 14 });
+      gsap.set("#np-nombres", { opacity: 0, y: 18 });
+      gsap.set("#np-mensaje", { opacity: 0, y: 16 });
+    };
+
+    inicial();
+
+    ScrollTrigger.create({
+      trigger: "#padres-section",
+      start: "top 80%",
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(
+          "#np-foto",
+          { opacity: 1, y: 0, scale: 1, duration: 1.3, ease: "power2.out" },
+          0,
+        )
+          .to(
+            "#np-corazon",
+            { opacity: 1, scale: 1, duration: 1.2, ease: "back.out(1.6)" },
+            0.25,
+          )
+          .to(
+            "#np-polaroid",
+            {
+              opacity: 1,
+              x: 0,
+              duration: 1.3,
+              ease: "back.out(1.3)",
+            },
+            0.45,
+          )
+          .to(
+            "#np-papitos",
+            { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" },
+            0.7,
+          )
+          .to(
+            "#np-nombres",
+            { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+            0.9,
+          )
+          .to(
+            "#np-mensaje",
+            { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" },
+            1.1,
+          )
+          .to(
+            ".np-destello",
+            {
+              opacity: 1,
+              scale: 1,
+              duration: 0.8,
+              stagger: 0.18,
+              ease: "back.out(2)",
+            },
+            1.2,
+          )
+          // los destellos quedan titilando
+          .add(() => {
+            gsap.to(".np-destello", {
+              opacity: 0.45,
+              scale: 0.85,
+              duration: 1.6,
+              repeat: -1,
+              yoyo: true,
+              stagger: 0.5,
+              ease: "sine.inOut",
+            });
+          }, 2.2);
+      },
+      onLeaveBack: inicial,
+    });
+  });
+</script>

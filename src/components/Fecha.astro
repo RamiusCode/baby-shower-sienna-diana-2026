@@ -1,0 +1,214 @@
+---
+// src/components/Fecha.astro
+// Fecha del evento: el año arriba, la fila día · número · mes entre líneas
+// finas y la hora debajo. Tipografía delicada: pesos normales, tamaños
+// contenidos y bastante tracking.
+
+const fecha = {
+  dia: "Sábado",
+  numero: "29",
+  mes: "Agosto",
+  anio: "2026",
+  hora: "Hora 14:30",
+};
+---
+
+<section class="relative w-full pt-4 pb-6 md:pt-6 md:pb-8 px-4">
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="max-w-2xl mx-auto text-center relative">
+    <!-- ✦ Separador dorado: línea que se desvanece + rombo al centro -->
+    <div
+      class="mb-5 md:mb-6 flex items-center justify-center gap-3"
+      id="separador-evento"
+    >
+      <span
+        class="block h-px w-16 md:w-24 bg-gradient-to-r from-transparent to-[#c08b3e]"
+      ></span>
+      <span
+        class="block w-1.5 h-1.5 rotate-45 border border-[#c08b3e] bg-[#c08b3e]/25"
+      ></span>
+      <span
+        class="block h-px w-16 md:w-24 bg-gradient-to-l from-transparent to-[#c08b3e]"
+      ></span>
+    </div>
+
+    <!-- 💗 Invitación (mismo tamaño y espaciado que el mensaje de los papás) -->
+    <div class="mb-4 flex justify-center" id="invita-evento">
+      <p
+        class="font-cinzel text-lg md:text-xl text-[#e58aa6] font-medium uppercase tracking-[0.03em] leading-[1.6] max-w-[85%] md:max-w-[75%]"
+      >
+        Acompáñanos a celebrar el día
+      </p>
+    </div>
+
+    <!-- Año, con una mariposa pequeña a cada lado -->
+    <div
+      class="mb-4 flex items-center justify-center gap-10 md:gap-14"
+      id="anio-evento"
+    >
+      <!-- El volteo va en el <img> y la animación en el <span>:
+           GSAP escribe su propio transform y se comería el scale-x. -->
+      <span class="block w-14 md:w-16" id="mariposa-anio-izq">
+        <img
+          src="/imagenes/mariposa2.png"
+          alt=""
+          class="w-full h-auto select-none pointer-events-none"
+        />
+      </span>
+
+      <p
+        class="font-cinzel text-base md:text-xl text-[#c08b3e] font-normal tracking-[0.3em] indent-[0.3em]"
+      >
+        {fecha.anio}
+      </p>
+
+      <span class="block w-14 md:w-16" id="mariposa-anio-der">
+        <img
+          src="/imagenes/mariposa2.png"
+          alt=""
+          class="w-full h-auto select-none pointer-events-none scale-x-[-1]"
+        />
+      </span>
+    </div>
+
+    <!-- 📅 Fecha con líneas arriba y abajo -->
+    <div class="relative max-w-md mx-auto" id="fecha-evento">
+      <div class="flex items-center justify-center gap-4 md:gap-12">
+        <!-- DÍA con líneas arriba y abajo -->
+        <div class="flex flex-col items-center w-28 md:w-32">
+          <div class="w-full h-px bg-[#e5a8bd] mb-2"></div>
+          <span
+            class="font-cinzel text-base md:text-xl text-[#4f4340] uppercase tracking-[0.2em] indent-[0.2em] font-normal text-center"
+          >
+            {fecha.dia}
+          </span>
+          <div class="w-full h-px bg-[#e5a8bd] mt-2"></div>
+        </div>
+
+        <!-- Número del día - CENTRADO -->
+        <div
+          class="flex items-center justify-center min-w-[70px] md:min-w-[90px]"
+        >
+          <span
+            class="font-cinzel text-5xl md:text-6xl leading-none text-[#e58aa6] font-normal"
+          >
+            {fecha.numero}
+          </span>
+        </div>
+
+        <!-- MES con líneas arriba y abajo -->
+        <div class="flex flex-col items-center w-28 md:w-32">
+          <div class="w-full h-px bg-[#e5a8bd] mb-2"></div>
+          <span
+            class="font-cinzel text-base md:text-xl text-[#4f4340] uppercase tracking-[0.2em] indent-[0.2em] font-normal text-center"
+          >
+            {fecha.mes}
+          </span>
+          <div class="w-full h-px bg-[#e5a8bd] mt-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HORA DEBAJO -->
+    <div class="mt-5 flex justify-center" id="hora-evento">
+      <p
+        class="font-cinzel text-lg md:text-2xl text-[#4f4340] font-normal uppercase tracking-[0.22em] indent-[0.22em]"
+      >
+        {fecha.hora}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎬 ANIMACIONES CON GSAP                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (typeof window !== "undefined") {
+    document.addEventListener("DOMContentLoaded", () => {
+      const mariposas = ["#mariposa-anio-izq", "#mariposa-anio-der"];
+
+      const inicial = () => {
+        // corta el revoloteo y deja las mariposas en su sitio
+        gsap.killTweensOf(mariposas);
+        gsap.set(mariposas, { x: 0, y: 0, rotation: 0 });
+        // cada bloque llega desde un sitio distinto
+        gsap.set("#separador-evento", { opacity: 0, scaleX: 0.3 });
+        gsap.set("#invita-evento", { opacity: 0, y: -22 });
+        gsap.set("#anio-evento", { opacity: 0, x: -38 });
+        gsap.set("#fecha-evento", { opacity: 0, x: 38, scale: 0.96 });
+        gsap.set("#hora-evento", { opacity: 0, y: 26 });
+      };
+
+      inicial();
+
+      ScrollTrigger.create({
+        trigger: "#separador-evento",
+        start: "top 85%",
+        onEnter: () => {
+          const tl = gsap.timeline();
+          tl.to(
+            "#separador-evento",
+            { opacity: 1, scaleX: 1, duration: 1.3, ease: "power3.out" },
+            0,
+          )
+            .to(
+              "#invita-evento",
+              { opacity: 1, y: 0, duration: 1.3, ease: "power3.out" },
+              0.1,
+            )
+            .to(
+              "#anio-evento",
+              { opacity: 1, x: 0, duration: 1.4, ease: "power3.out" },
+              0.2,
+            )
+            .to(
+              "#fecha-evento",
+              {
+                opacity: 1,
+                x: 0,
+                scale: 1,
+                duration: 1.4,
+                ease: "back.out(1.2)",
+              },
+              0.3,
+            )
+            .to(
+              "#hora-evento",
+              { opacity: 1, y: 0, duration: 1.3, ease: "power3.out" },
+              0.4,
+            )
+            // Las mariposas quedan revoloteando: sube y baja, con un pelín
+            // de deriva y giro, cada una a su ritmo para que no vayan a la par.
+            .add(() => {
+              gsap.to("#mariposa-anio-izq", {
+                y: -15,
+                x: -7,
+                rotation: -11,
+                duration: 2.2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+              });
+              gsap.to("#mariposa-anio-der", {
+                y: -14,
+                x: 7,
+                rotation: 11,
+                duration: 2.7,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                delay: 0.4,
+              });
+            }, 1.6);
+        },
+        onLeaveBack: inicial,
+      });
+    });
+  }
+</script>

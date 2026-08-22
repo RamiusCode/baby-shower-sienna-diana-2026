@@ -1,0 +1,236 @@
+---
+// src/components/Mensaje.astro
+// "Mis papis" — arco con cabecera color crema (hojas + nombres) y la foto
+// abajo, como el diseño de referencia (foto2.png), con las hojas del costado
+// asomando por los bordes.
+
+const papis = {
+  titulo: "Mis Papis",
+  nombres: "Arturo y Nicol",
+};
+---
+
+<section id="mensaje-section">
+  <div id="ms-wrap">
+    <!-- ═══════ HOJAS DE LOS COSTADOS (detrás del arco) ═══════ -->
+    <div id="ms-costado-izq"><img src="/imagenes/costado.png" alt="" /></div>
+    <div id="ms-costado-der"><img src="/imagenes/costado.png" alt="" /></div>
+
+    <!-- ═══════ ARCO ═══════ -->
+    <div id="ms-arco">
+      <!-- Cabecera crema -->
+      <div id="ms-header">
+        <img id="ms-hojas" src="/imagenes/separador.png" alt="" />
+
+        <h3 id="ms-titulo" class="font-cinzel">{papis.titulo}</h3>
+
+        <div id="ms-divisor">
+          <span class="ms-div-linea"></span>
+          <span class="ms-div-punto"></span>
+          <span class="ms-div-linea"></span>
+        </div>
+
+        <p id="ms-nombres" class="font-great-vibes">{papis.nombres}</p>
+      </div>
+
+      <!-- Foto -->
+      <img id="ms-foto" src="/imagenes/foto7.png" alt="Mis papis" />
+    </div>
+  </div>
+</section>
+
+<style>
+  #mensaje-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    background: transparent;
+    padding: 0.5rem 0 2rem;
+  }
+
+  #ms-wrap {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+  }
+
+  #ms-wrap img {
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  /* ── Hojas de los costados ── */
+  #ms-costado-izq,
+  #ms-costado-der {
+    position: absolute;
+    top: 34%;
+    width: 15cqw;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  #ms-costado-izq img,
+  #ms-costado-der img {
+    width: 100%;
+    height: auto;
+  }
+
+  #ms-costado-izq {
+    left: 0;
+  }
+
+  #ms-costado-der {
+    right: 0;
+  }
+
+  #ms-costado-der img {
+    transform: scaleX(-1);
+  }
+
+  /* ═══════ ARCO ═══════ */
+  #ms-arco {
+    position: relative;
+    z-index: 1;
+    width: 86cqw;
+    margin: 0 auto;
+    overflow: hidden;
+    /* marco crema alrededor de la foto */
+    padding: 0 3.2cqw 3.2cqw;
+    /* cúpula arriba, esquinas suaves abajo */
+    border-radius: 43cqw 43cqw 5cqw 5cqw / 32cqw 32cqw 5cqw 5cqw;
+    background: #f6f7ec;
+    box-shadow:
+      0 2px 6px rgba(90, 105, 70, 0.12),
+      0 16px 34px rgba(90, 105, 70, 0.2);
+  }
+
+  /* ── Cabecera crema ── */
+  #ms-header {
+    position: relative;
+    /* deja libre la cúpula para las hojas */
+    padding: 30cqw 5cqw 4.5cqw;
+    text-align: center;
+  }
+
+  /* hojas dentro de la cúpula, por encima del texto */
+  #ms-hojas {
+    position: absolute;
+    top: 1cqw;
+    left: 6cqw;
+    width: 68cqw;
+    height: auto;
+  }
+
+  #ms-titulo {
+    position: relative;
+    margin: 0;
+    font-size: 8cqw;
+    line-height: 1.1;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #5f7a35;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* ── Divisor ── */
+  #ms-divisor {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.2cqw;
+    margin-top: 3cqw;
+  }
+
+  .ms-div-linea {
+    display: block;
+    width: 14cqw;
+    height: 1px;
+    background: rgba(142, 156, 107, 0.6);
+  }
+
+  .ms-div-punto {
+    display: block;
+    width: 1.5cqw;
+    height: 1.5cqw;
+    border-radius: 50%;
+    background: #c49a63;
+  }
+
+  #ms-nombres {
+    position: relative;
+    margin: 2.2cqw 0 0;
+    font-size: 10cqw;
+    line-height: 1.15;
+    color: #6f8442;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* ── Foto ── */
+  #ms-foto {
+    width: 100%;
+    height: auto;
+    /* proporción original de foto7.png */
+    aspect-ratio: 1066 / 1600;
+    object-fit: cover;
+    border-radius: 2.5cqw 2.5cqw 3cqw 3cqw;
+    /* filito para que la foto se despegue del marco crema */
+    box-shadow:
+      0 0 0 1px rgba(142, 156, 107, 0.45),
+      0 4px 12px rgba(90, 105, 70, 0.18);
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const items = ["#ms-titulo", "#ms-divisor", "#ms-nombres"];
+
+    const inicial = () => {
+      gsap.set("#ms-arco", { opacity: 0, y: 34, scale: 0.96 });
+      gsap.set("#ms-hojas", { opacity: 0, y: "-30%" });
+      gsap.set("#ms-costado-izq", { opacity: 0, x: "-55%" });
+      gsap.set("#ms-costado-der", { opacity: 0, x: "55%" });
+      gsap.set(items, { opacity: 0, y: 16 });
+    };
+
+    inicial();
+
+    ScrollTrigger.create({
+      trigger: "#mensaje-section",
+      start: "top 80%",
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(
+          "#ms-arco",
+          { opacity: 1, y: 0, scale: 1, duration: 1.3, ease: "power2.out" },
+          0,
+        )
+          .to(
+            "#ms-hojas",
+            { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" },
+            0.2,
+          )
+          .to(
+            ["#ms-costado-izq", "#ms-costado-der"],
+            { opacity: 1, x: 0, duration: 1.4, ease: "power2.out" },
+            0.3,
+          )
+          .to(
+            items,
+            { opacity: 1, y: 0, duration: 0.9, stagger: 0.14, ease: "power2.out" },
+            0.45,
+          );
+      },
+      onLeaveBack: inicial,
+    });
+  });
+</script>

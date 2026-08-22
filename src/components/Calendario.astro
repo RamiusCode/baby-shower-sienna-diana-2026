@@ -1,0 +1,40 @@
+---
+// src/components/Calendario.astro
+---
+
+<section class="w-full" id="seccion-calendario">
+    <img
+        id="img-calendario"
+        src="/imagenes/calendario.png"
+        alt="Calendario del evento"
+        class="w-full h-auto block"
+        style="opacity: 0;"
+    />
+</section>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        gsap.set("#img-calendario", { opacity: 0, y: 24, scale: 0.97 });
+
+        ScrollTrigger.create({
+            trigger: "#seccion-calendario",
+            start: "top 85%",
+
+            onEnter: () => {
+                gsap.to("#img-calendario", {
+                    opacity: 1, y: 0, scale: 1,
+                    duration: 1, ease: "power2.out",
+                });
+            },
+
+            onLeaveBack: () => {
+                gsap.set("#img-calendario", { opacity: 0, y: 24, scale: 0.97 });
+            },
+        });
+    });
+</script>

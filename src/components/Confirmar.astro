@@ -1,0 +1,220 @@
+---
+// src/components/Confirmar.astro
+// Confirmar asistencia — mismo diseño de la referencia: título en cursiva
+// verde salvia, texto en café y botón tipo píldora, con las hojas a la
+// izquierda y la jirafa sentada en la esquina.
+
+const confirmacion = {
+  telefono: "59162110206", // +591 62110206
+  limite: "5 de agosto",
+  mensaje:
+    "¡Hola! Confirmo mi asistencia al Baby Shower de Karím. Nos vemos el sábado 8 de agosto.",
+};
+
+const linkWhatsApp = `https://wa.me/${confirmacion.telefono}?text=${encodeURIComponent(confirmacion.mensaje)}`;
+---
+
+<section id="confirmar-section">
+  <div id="cf-wrap">
+    <!-- ═══════ HOJAS (izquierda) ═══════ -->
+    <div id="cf-costado-izq"><img src="/imagenes/costado.png" alt="" /></div>
+
+    <div id="cf-contenido">
+      <h3 id="cf-titulo" class="font-great-vibes">
+        Confirmar<br />Asistencia
+      </h3>
+
+      <p id="cf-texto" class="font-crimson">
+        Nos encantará saber que nos<br />
+        acompañarás, permítenos preparar<br />
+        los detalles confirmando tu<br />
+        asistencia.
+      </p>
+
+      <p id="cf-limite" class="font-crimson">
+        Confirmar hasta el {confirmacion.limite}
+      </p>
+
+      <a
+        id="cf-boton"
+        class="font-crimson"
+        href={linkWhatsApp}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        CONFIRMAR AQUÍ
+      </a>
+    </div>
+
+    <!-- ═══════ JIRAFA (esquina derecha) ═══════ -->
+    <img id="cf-jirafa" src="/imagenes/jirafa.png" alt="" />
+  </div>
+</section>
+
+<style>
+  #confirmar-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    background: transparent;
+    padding: 0.5rem 0 2rem;
+  }
+
+  #cf-wrap {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+    padding: 4cqw 0 2cqw;
+  }
+
+  #cf-wrap img {
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  /* ── Hojas de la izquierda ── */
+  #cf-costado-izq {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 18cqw;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #cf-costado-izq img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* ── Contenido ── */
+  #cf-contenido {
+    position: relative;
+    z-index: 2;
+    /* deja libre la esquina donde va la jirafa */
+    padding: 0 26cqw 0 10cqw;
+    text-align: center;
+  }
+
+  #cf-titulo {
+    margin: 0;
+    font-size: 13cqw;
+    line-height: 1.15;
+    font-weight: 400;
+    color: #8b9a78;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  #cf-texto {
+    margin: 4cqw 0 0;
+    font-size: 5cqw;
+    line-height: 1.6;
+    font-weight: 700;
+    color: #7b5c43;
+  }
+
+  #cf-limite {
+    margin: 3cqw 0 0;
+    font-size: 4.6cqw;
+    line-height: 1.4;
+    font-style: italic;
+    color: #9a7a5c;
+  }
+
+  /* ── Botón ── */
+  #cf-boton {
+    display: inline-block;
+    margin-top: 4.5cqw;
+    padding: 2.2cqw 6cqw;
+    border-radius: 999px;
+    background: #8b9a74;
+    color: #ffffff;
+    font-size: 5cqw;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    text-decoration: none;
+    box-shadow: 0 3px 8px rgba(80, 95, 60, 0.28);
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  #cf-boton:hover {
+    opacity: 0.92;
+  }
+
+  #cf-boton:active {
+    transform: scale(0.96);
+  }
+
+  /* ── Jirafa en la esquina ── */
+  #cf-jirafa {
+    position: absolute;
+    right: 1cqw;
+    bottom: 0;
+    width: 27cqw;
+    height: auto;
+    z-index: 3;
+    filter: drop-shadow(0 4px 8px rgba(90, 110, 60, 0.18));
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const items = ["#cf-titulo", "#cf-texto", "#cf-limite", "#cf-boton"];
+
+    const inicial = () => {
+      gsap.set("#cf-costado-izq", { opacity: 0, x: "-55%" });
+      gsap.set("#cf-jirafa", { opacity: 0, x: "40%", y: "15%" });
+      gsap.set(items, { opacity: 0, y: 16 });
+    };
+
+    inicial();
+
+    ScrollTrigger.create({
+      trigger: "#confirmar-section",
+      start: "top 80%",
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(
+          "#cf-costado-izq",
+          { opacity: 1, x: 0, duration: 1.4, ease: "power2.out" },
+          0,
+        )
+          .to(
+            "#cf-jirafa",
+            { opacity: 1, x: 0, y: 0, duration: 1.4, ease: "power2.out" },
+            0.15,
+          )
+          .to(
+            items,
+            { opacity: 1, y: 0, duration: 0.9, stagger: 0.14, ease: "power2.out" },
+            0.3,
+          )
+          // latido suave del botón
+          .add(() => {
+            gsap.to("#cf-boton", {
+              y: -3,
+              duration: 2,
+              ease: "sine.inOut",
+              yoyo: true,
+              repeat: -1,
+            });
+          });
+      },
+      onLeaveBack: () => {
+        gsap.killTweensOf("#cf-boton");
+        gsap.set("#cf-boton", { y: 0 });
+        inicial();
+      },
+    });
+  });
+</script>

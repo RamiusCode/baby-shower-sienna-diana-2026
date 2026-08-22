@@ -1,0 +1,418 @@
+---
+// src/components/NombresFlores.astro
+// Bienvenida — temática flores + mariposas
+// Mismo lienzo de ancho fijo que la Portada: todo en cqw para que se vea
+// igual en celular, laptop y PC.
+---
+
+<section id="nombres-flores">
+  <div id="nf-marco">
+    <!-- ═══════ FLORES + MARIPOSAS (esquina superior) ═══════ -->
+    <img id="nf-flores" src="/imagenes/flor.png" alt="" />
+
+    <!-- ═══════ TEXTO CENTRAL ═══════ -->
+    <div id="nf-texto">
+      <p id="nf-invito" class="font-cinzel">Te invito a mi</p>
+
+      <img id="nf-logo" src="/imagenes/logo.png" alt="Baby Shower" />
+
+      <p id="nf-nombre" class="font-selna">Sienna Diana</p>
+
+      <!-- el elefante con tres mariposas revoloteando a los costados -->
+      <div id="nf-elefante-fila">
+        <div class="nf-mp nf-mp-1"><img src="/imagenes/mariposa2.png" alt="" /></div>
+        <div class="nf-mp nf-mp-2"><img src="/imagenes/mariposa2.png" alt="" /></div>
+
+        <img id="nf-elefante" src="/imagenes/elefante2.png" alt="" />
+
+        <div class="nf-mp nf-mp-3"><img src="/imagenes/mariposa2.png" alt="" /></div>
+        <div class="nf-mp nf-mp-4"><img src="/imagenes/mariposa2.png" alt="" /></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎵 BOTÓN FLOTANTE DE MÚSICA -->
+  <div
+    class="fixed bottom-6 right-6 z-[9999]"
+    id="boton-musica-flotante"
+    style="opacity: 0;"
+  >
+    <button
+      id="toggle-musica-global"
+      class="group relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+      style="background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(212,122,149,0.55);"
+      aria-label="Controlar música"
+    >
+      <!-- ICONO PAUSE - inicia oculto -->
+      <svg
+        id="icono-pause-global"
+        class="w-6 h-6 hidden relative z-10"
+        style="color: #d47a95;"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M5.5 3.5A1.5 1.5 0 017 2h1a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 018 18H7a1.5 1.5 0 01-1.5-1.5v-13zm7 0A1.5 1.5 0 0114 2h1a1.5 1.5 0 011.5 1.5v13a1.5 1.5 0 01-1.5 1.5h-1a1.5 1.5 0 01-1.5-1.5v-13z"
+        ></path>
+      </svg>
+
+      <!-- ICONO PLAY - inicia visible -->
+      <svg
+        id="icono-play-global"
+        class="w-6 h-6 relative z-10"
+        style="color: #d47a95;"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"
+        ></path>
+      </svg>
+
+      <!-- Onda de sonido - inicia oculta -->
+      <div
+        class="absolute -inset-2 rounded-full hidden"
+        style="border: 2px solid rgba(212,122,149,0.55);"
+        id="onda-sonido"
+      >
+      </div>
+    </button>
+  </div>
+</section>
+
+<style>
+  #nombres-flores {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    /* deja ver el fondo global estático del Layout */
+    background: transparent;
+  }
+
+  /* ═══════ LIENZO (mismo ancho que la portada) ═══════ */
+  #nf-marco {
+    position: relative;
+    width: min(100vw, 480px);
+    container-type: inline-size;
+    /* La altura la define el contenido, no un aspect-ratio fijo: así la
+       sección termina justo debajo del nombre y no deja hueco muerto antes
+       de la siguiente. El padding de arriba reserva el sitio de las flores
+       (flor.png es 100% de ancho y ratio 1.956 → 51cqw de alto). */
+    padding: 52cqw 0 12cqw;
+  }
+
+  #nf-marco img {
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* ── Flores + mariposas de arriba ── */
+  #nf-flores {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ── Bloque de texto central ── */
+  /* En flujo normal: es lo que le da la altura a la sección. */
+  #nf-texto {
+    position: relative;
+    width: 94cqw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 4;
+  }
+
+  #nf-invito {
+    margin: 0;
+    font-size: 4.4cqw;
+    line-height: 1.4;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    /* compensa el espacio que letter-spacing deja tras la última letra */
+    text-indent: 0.26em;
+    text-transform: uppercase;
+    /* siempre en una sola línea */
+    white-space: nowrap;
+    color: #c2a05a;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  #nf-logo {
+    width: 57cqw;
+    height: auto;
+    margin-top: 0.5cqw;
+    filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.85));
+  }
+
+  #nf-nombre {
+    margin: 6cqw 0 0;
+    /* Selna solo trae Regular: peso normal para que el navegador no le
+       invente una negrita falsa */
+    font-size: 9.5cqw;
+    line-height: 1.15;
+    /* el nombre nunca se parte en dos renglones */
+    white-space: nowrap;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    /* compensa el espacio que letter-spacing deja tras la última letra */
+    text-indent: 0.04em;
+    text-transform: uppercase;
+    /* Dorado plano, sin degradados */
+    color: #c9a227;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8),
+      0 3px 12px rgba(255, 255, 255, 0.6);
+  }
+
+  /* ── Elefante + mariposas ── */
+  #nf-elefante-fila {
+    position: relative;
+    width: 100%;
+    margin-top: 6cqw;
+    display: flex;
+    justify-content: center;
+  }
+
+  #nf-elefante {
+    width: 50cqw;
+    height: auto;
+    filter: drop-shadow(0 6px 14px rgba(190, 130, 155, 0.2));
+  }
+
+  .nf-mp {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 10px rgba(150, 110, 175, 0.2));
+  }
+
+  .nf-mp img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* mediana, arriba a la izquierda */
+  .nf-mp-1 {
+    top: 1cqw;
+    left: 13cqw;
+    width: 13cqw;
+  }
+
+  /* pequeña, abajo a la izquierda */
+  .nf-mp-2 {
+    bottom: 2cqw;
+    left: 6cqw;
+    width: 8cqw;
+  }
+
+  /* mediana, arriba a la derecha */
+  .nf-mp-3 {
+    top: 3cqw;
+    right: 10cqw;
+    width: 11cqw;
+  }
+
+  /* pequeña, abajo a la derecha, más al borde */
+  .nf-mp-4 {
+    bottom: 5cqw;
+    right: 3cqw;
+    width: 7cqw;
+  }
+
+  /* Las de la derecha van espejadas para que también miren al elefante.
+     El volteo va en el <img>: GSAP anima el contenedor y lo pisaría. */
+  .nf-mp-3 img,
+  .nf-mp-4 img {
+    transform: scaleX(-1);
+  }
+
+  /* ── Botón de música ── */
+  #onda-sonido {
+    animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    75%,
+    100% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse-subtle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  #boton-musica-flotante button {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+
+  #boton-musica-flotante button:hover {
+    animation: none;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // ── Entrada animada ───────────────────────────────────────
+    // Todo entra casi a la vez, pero cada pieza llega desde un lado
+    // distinto: las flores caen, el texto se abre desde los costados,
+    // el elefante sube y las mariposas llegan de sus cuatro esquinas.
+    const mariposas = [".nf-mp-1", ".nf-mp-2", ".nf-mp-3", ".nf-mp-4"];
+
+    const inicial = () => {
+      gsap.killTweensOf(mariposas);
+      gsap.set("#nf-flores", { opacity: 0, y: "-40%" });
+      gsap.set("#nf-invito", { opacity: 0, x: -40 });
+      gsap.set("#nf-logo", { opacity: 0, y: -28, scale: 0.9 });
+      gsap.set("#nf-nombre", { opacity: 0, x: 40 });
+      gsap.set("#nf-elefante", { opacity: 0, y: 46, scale: 0.9 });
+      gsap.set(".nf-mp-1", { opacity: 0, x: -46, y: -26, rotation: -14, scale: 0.6 });
+      gsap.set(".nf-mp-2", { opacity: 0, x: -40, y: 30, rotation: 12, scale: 0.6 });
+      gsap.set(".nf-mp-3", { opacity: 0, x: 46, y: -24, rotation: 14, scale: 0.6 });
+      gsap.set(".nf-mp-4", { opacity: 0, x: 40, y: 32, rotation: -12, scale: 0.6 });
+    };
+
+    inicial();
+
+    const revolotear = () => {
+      gsap.to(".nf-mp-1", {
+        y: -19, x: -9, rotation: -13,
+        duration: 2.4, repeat: -1, yoyo: true, ease: "sine.inOut",
+      });
+      gsap.to(".nf-mp-2", {
+        y: -16, x: 8, rotation: 11,
+        duration: 2.9, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.5,
+      });
+      gsap.to(".nf-mp-3", {
+        y: -18, x: 9, rotation: 12,
+        duration: 3.2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.9,
+      });
+      gsap.to(".nf-mp-4", {
+        y: -15, x: 7, rotation: -10,
+        duration: 2.6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.3,
+      });
+    };
+
+    const armarEntrada = () => {
+      ScrollTrigger.create({
+        trigger: "#nombres-flores",
+        start: "top 85%",
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to("#nf-flores", { opacity: 1, y: 0, duration: 1.8, ease: "power2.out" }, 0)
+          .to("#nf-invito", { opacity: 1, x: 0, duration: 1.4, ease: "power3.out" }, 0.1)
+          .to(
+            "#nf-logo",
+            { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: "back.out(1.2)" },
+            0.2,
+          )
+          .to("#nf-nombre", { opacity: 1, x: 0, duration: 1.4, ease: "power3.out" }, 0.3)
+          .to(
+            "#nf-elefante",
+            { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: "back.out(1.2)" },
+            0.35,
+          )
+          .to(
+            mariposas,
+            {
+              opacity: 1, x: 0, y: 0, rotation: 0, scale: 1,
+              duration: 1.5, stagger: 0.12, ease: "back.out(1.4)",
+            },
+            0.45,
+          )
+          .add(revolotear, 2.1);
+      },
+        // al volver a subir se rearma, así la animación se repite en cada bajada
+        onLeaveBack: inicial,
+      });
+
+      ScrollTrigger.refresh();
+    };
+
+    // Esta sección queda detrás de la portada, así que al cargar la página ya
+    // está "en pantalla" y la animación se gastaría sin que nadie la vea.
+    // Por eso se arma recién cuando el invitado abre el sobre. Si la portada
+    // no está en uso, arranca de una.
+    const hayPortada = document.getElementById("portada-section");
+
+    if (!hayPortada || (window as any).invitacionAbierta) {
+      armarEntrada();
+    } else {
+      window.addEventListener("invitacion-abierta", armarEntrada, {
+        once: true,
+      });
+    }
+
+    // ── Botón flotante de música ──────────────────────────────
+    const botonToggle = document.getElementById("toggle-musica-global");
+    const iconoPlay = document.getElementById("icono-play-global");
+    const iconoPause = document.getElementById("icono-pause-global");
+    const ondaSonido = document.getElementById("onda-sonido");
+    const botonFlotante = document.getElementById("boton-musica-flotante");
+
+    if (botonFlotante) botonFlotante.style.opacity = "1";
+
+    // Sincronizar estado visual al cargar (por si la música ya venía corriendo desde Portada)
+    function sincronizarEstadoInicial() {
+      const estadoActual = (window as any).estaReproduciendoGlobal;
+      if (estadoActual) {
+        iconoPlay?.classList.add("hidden");
+        iconoPause?.classList.remove("hidden");
+        ondaSonido?.classList.remove("hidden");
+      }
+    }
+
+    sincronizarEstadoInicial();
+
+    // Portada dispara este evento cuando el invitado toca el sobre
+    window.addEventListener("musica-iniciada", () => {
+      iconoPlay?.classList.add("hidden");
+      iconoPause?.classList.remove("hidden");
+      ondaSonido?.classList.remove("hidden");
+    });
+
+    botonToggle?.addEventListener("click", () => {
+      const audioActual = (window as any).audioGlobal;
+      const estadoActual = (window as any).estaReproduciendoGlobal;
+
+      if (estadoActual && audioActual) {
+        audioActual.pause();
+        (window as any).estaReproduciendoGlobal = false;
+        iconoPause?.classList.add("hidden");
+        iconoPlay?.classList.remove("hidden");
+        ondaSonido?.classList.add("hidden");
+      } else if (audioActual) {
+        audioActual.play().catch(() => {});
+        (window as any).estaReproduciendoGlobal = true;
+        iconoPlay?.classList.add("hidden");
+        iconoPause?.classList.remove("hidden");
+        ondaSonido?.classList.remove("hidden");
+      }
+    });
+  });
+</script>
